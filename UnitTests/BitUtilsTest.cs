@@ -27,16 +27,17 @@ namespace UnitTests
         [TestMethod]
         public void SetBit()
         {
-            // 0 -> 1
-            for (byte i = 0; i < maxBit; ++i)
-            {
-                Assert.AreEqual(1u << i, BitUtils.SetBit(0, (byte)(maxBit - i)));
-            }
-            // 1 -> 1
             for (byte i = 0; i < maxBit; ++i)
             {
                 var number = 1u << i;
+                // 0 -> 1
+                Assert.AreEqual(number, BitUtils.SetBit(0, (byte)(maxBit - i)));
+                Assert.AreEqual(number, BitUtils.SetBit(0, (byte)(maxBit - i), true));
+                // 1 -> 1
                 Assert.AreEqual(number, BitUtils.SetBit(number, (byte)(maxBit - i)));
+                Assert.AreEqual(number, BitUtils.SetBit(number, (byte)(maxBit - i), true));
+                // 1 -> 0
+                Assert.AreEqual(0u, BitUtils.SetBit(number, (byte)(maxBit - i), false));
             }
         }
 
@@ -70,6 +71,18 @@ namespace UnitTests
             Assert.AreEqual(0u, BitUtils.ClearFirstBits(number, 3));
             Assert.AreEqual(0u, BitUtils.ClearFirstBits(number, 18));
             Assert.AreEqual(1u, BitUtils.ClearFirstBits(number + 1, 18));
+        }
+
+        [TestMethod]
+        public void BitsSwitch()
+        {
+            for (byte i = 0; i < maxBit; ++i)
+            {
+                var numberBefore = 1u << i;
+                byte otherIndex = (byte) (maxBit - i);
+                var numberAfter = 1u << otherIndex;
+                Assert.AreEqual(numberAfter, BitUtils.BitsSwitch(numberBefore, i, otherIndex));
+            }
         }
     }
 }
