@@ -54,5 +54,22 @@ namespace UnitTests
             Assert.AreEqual(24u, BitUtils.ClearBit(24, 2));
             Assert.AreEqual(1u << 31, BitUtils.ClearBit(1u << 31, 2));
         }
+
+        [TestMethod]
+        public void SetFirst()
+        {
+            var number = (1u << 31) + (1u << 30) + (1u << 29);
+            Assert.AreEqual(number, BitUtils.SetFirstBits(0, 3));
+            Assert.AreEqual(number, BitUtils.SetFirstBits(number, 3));
+        }
+
+        [TestMethod]
+        public void ClearFirst()
+        {
+            var number = (1u << 31) + (1u << 30) + (1u << 29);
+            Assert.AreEqual(0u, BitUtils.ClearFirstBits(number, 3));
+            Assert.AreEqual(0u, BitUtils.ClearFirstBits(number, 18));
+            Assert.AreEqual(1u, BitUtils.ClearFirstBits(number + 1, 18));
+        }
     }
 }
