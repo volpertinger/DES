@@ -9,8 +9,8 @@
         private static readonly byte minBitAmount = 0;
         private static readonly byte maxBitIndex = 31;
         private static readonly byte minBitIndex = 0;
-        private static readonly uint firstBitMask = (uint)1 << maxBitIndex;
-        private static readonly uint lastBitMask = 1;
+        private static readonly uint firstBitMask = 1;
+        private static readonly uint lastBitMask = (uint)1 << maxBitIndex;
 
         // ------------------------------------------------------------------------------------------------------------
         // public
@@ -18,13 +18,13 @@
         public static bool GetBit(uint number, byte index)
         {
             BitValidation(index);
-            if (index > maxBitIndex / 2)
+            if (index < maxBitIndex / 2)
             {
-                return ((number >> (maxBitIndex - index)) & lastBitMask) != 0;
+                return ((number >> index) & firstBitMask) != 0;
             }
             else
             {
-                return ((number << index) & firstBitMask) != 0;
+                return ((number << (maxBitIndex - index) & lastBitMask)) != 0;
             }
 
         }
@@ -105,7 +105,7 @@
 
         private static uint GetPureBitValue(byte bit)
         {
-            return lastBitMask << (maxBitIndex - bit);
+            return firstBitMask << bit;
         }
     }
 }
