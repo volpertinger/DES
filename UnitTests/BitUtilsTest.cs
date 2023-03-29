@@ -5,24 +5,54 @@ namespace UnitTests
     [TestClass]
     public class BitUtilsTest
     {
+        private readonly byte maxBit = 31;
         [TestMethod]
         public void GetBit()
         {
-            byte maxBit = 31;
             for (byte i = 0; i <= maxBit; ++i)
             {
                 for (byte j = 0; j <= maxBit; ++j)
                 {
                     if (j == i)
                     {
-                        Assert.AreEqual(true, BitUtils.GetBit((uint)1 << i, (byte)(maxBit - j)));
+                        Assert.AreEqual(true, BitUtils.GetBit(1u << i, (byte)(maxBit - j)));
                     }
                     else
                     {
-                        Assert.AreEqual(false, BitUtils.GetBit((uint)1 << i, (byte)(maxBit - j)));
+                        Assert.AreEqual(false, BitUtils.GetBit(1u << i, (byte)(maxBit - j)));
                     }
                 }
             }
+        }
+        [TestMethod]
+        public void SetBit()
+        {
+            // 0 -> 1
+            for (byte i = 0; i < maxBit; ++i)
+            {
+                Assert.AreEqual(1u << i, BitUtils.SetBit(0, (byte)(maxBit - i)));
+            }
+            // 1 -> 1
+            for (byte i = 0; i < maxBit; ++i)
+            {
+                var number = 1u << i;
+                Assert.AreEqual(number, BitUtils.SetBit(number, (byte)(maxBit - i)));
+            }
+        }
+
+        [TestMethod]
+        public void ClearBit()
+        {
+            // 1 -> 0
+            Assert.AreEqual(1u, BitUtils.ClearBit(3, 30));
+            Assert.AreEqual(0u, BitUtils.ClearBit(1, 31));
+            Assert.AreEqual(16u, BitUtils.ClearBit(24, 28));
+            Assert.AreEqual(0u, BitUtils.ClearBit(1u << 31, 0));
+            // 0 -> 0
+            Assert.AreEqual(3u, BitUtils.ClearBit(3, 0));
+            Assert.AreEqual(1u, BitUtils.ClearBit(1, 1));
+            Assert.AreEqual(24u, BitUtils.ClearBit(24, 2));
+            Assert.AreEqual(1u << 31, BitUtils.ClearBit(1u << 31, 2));
         }
     }
 }
