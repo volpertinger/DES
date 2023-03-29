@@ -1,4 +1,3 @@
-using System;
 using DES;
 
 namespace UnitTests
@@ -7,9 +6,23 @@ namespace UnitTests
     public class BitUtilsTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void GetBit()
         {
-            Assert.AreEqual(true, true);
+            byte maxBit = 31;
+            for (byte i = 0; i <= maxBit; ++i)
+            {
+                for (byte j = 0; j <= maxBit; ++j)
+                {
+                    if (j == i)
+                    {
+                        Assert.AreEqual(true, BitUtils.GetBit((uint)1 << i, (byte)(maxBit - j)));
+                    }
+                    else
+                    {
+                        Assert.AreEqual(false, BitUtils.GetBit((uint)1 << i, (byte)(maxBit - j)));
+                    }
+                }
+            }
         }
     }
 }
