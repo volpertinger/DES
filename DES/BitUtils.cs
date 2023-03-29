@@ -5,6 +5,8 @@
         // ------------------------------------------------------------------------------------------------------------
         // variabels
         // ------------------------------------------------------------------------------------------------------------
+        private static readonly byte maxBitAmount = 32;
+        private static readonly byte minBitAmount = 0;
         private static readonly byte maxBitIndex = 31;
         private static readonly byte minBitIndex = 0;
         private static readonly uint firstBitMask = (uint)1 << maxBitIndex;
@@ -43,6 +45,22 @@
             return number;
         }
 
+        public static uint ClearFirstBits(uint number, byte bitsNumber)
+        {
+            BitAmountValidation(bitsNumber);
+            for (byte i = 0; i < bitsNumber; ++i)
+                number = ClearBit(number, i);
+            return number;
+        }
+
+        public static uint SetFirstBits(uint number, byte bitsNumber)
+        {
+            BitAmountValidation(bitsNumber);
+            for (byte i = 0; i < bitsNumber; ++i)
+                number = SetBit(number, i);
+            return number;
+        }
+
         // ------------------------------------------------------------------------------------------------------------
         // private
         // ------------------------------------------------------------------------------------------------------------
@@ -51,11 +69,23 @@
             return bit >= minBitIndex && bit <= maxBitIndex;
         }
 
+        private static bool IsValidBitAmount(byte amount)
+        {
+            return amount >= minBitAmount && amount <= maxBitAmount;
+        }
+
         private static void BitValidation(byte bit)
         {
             if (!IsValidBit(bit))
                 throw new ArgumentException(String.Format("invalid bit index {0}. Right value is: {1} to {2}.",
                     bit, minBitIndex, maxBitIndex));
+        }
+
+        private static void BitAmountValidation(byte amount)
+        {
+            if (!IsValidBitAmount(amount))
+                throw new ArgumentException(String.Format("invalid bit amount {0}. Right value is: {1} to {2}.",
+                    amount, minBitAmount, maxBitAmount));
         }
 
         private static uint GetPureBitValue(byte bit)
