@@ -45,6 +45,13 @@
             return number;
         }
 
+        public static uint SetBit(uint number, byte index, bool bit)
+        {
+            if (bit)
+                return SetBit(number, index);
+            return ClearBit(number, index);
+        }
+
         public static uint ClearFirstBits(uint number, byte bitsNumber)
         {
             BitAmountValidation(bitsNumber);
@@ -58,6 +65,14 @@
             BitAmountValidation(bitsNumber);
             for (byte i = 0; i < bitsNumber; ++i)
                 number = SetBit(number, i);
+            return number;
+        }
+
+        public static uint BitsSwitch(uint number, byte i, byte j)
+        {
+            var tmp = GetBit(number, i);
+            number = SetBit(number, i, GetBit(number, j));
+            number = SetBit(number, j, tmp);
             return number;
         }
 
