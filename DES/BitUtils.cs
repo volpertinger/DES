@@ -135,6 +135,16 @@
             return number;
         }
 
+        /// <summary>
+        /// Returns maximum number (that is a power of 2) that an input number is divisible by
+        /// </summary>
+        public static uint MaxNumberPower2(uint number)
+        {
+            if (number == 0)
+                return maxBitIndex;
+            return number & (~(number - 1));
+        }
+
         // ------------------------------------------------------------------------------------------------------------
         // private
         // ------------------------------------------------------------------------------------------------------------
