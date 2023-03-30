@@ -9,6 +9,9 @@
         private const byte minBitAmount = 0;
         private const byte maxBitIndex = 31;
         private const byte minBitIndex = 0;
+        private const byte byteSize = 8;
+        private const byte maxByteIndex = maxBitIndex / byteSize;
+        private const byte minByteIndex = 0;
         private const uint firstBitMask = 1;
         private const uint lastBitMask = (uint)1 << maxBitIndex;
 
@@ -106,12 +109,43 @@
             return result;
         }
 
+        public static byte GetByte(uint number, byte index)
+        {
+            ByteValidation(index);
+            var firstAmount = getByteStart(index);
+            var lastAmount = (byte)(maxBitIndex - getByteEnd(index));
+            return (byte)InnerJoin(number, firstAmount, lastAmount);
+        }
+
+        public static uint SetByte(uint number, byte index, byte byte_)
+        {
+            ByteValidation(index);
+            var start = getByteStart(index);
+            var end = getByteEnd(index);
+            for (byte i = start, j = 0; i <= end; ++i, ++j)
+                number = SetBit(number, i, GetBit(byte_, j));
+            return number;
+        }
+
+        public static uint BytesSwitch(uint number, byte i, byte j)
+        {
+            var tmp = GetByte(number, i);
+            number = SetByte(number, i, GetByte(number, j));
+            number = SetByte(number, j, tmp);
+            return number;
+        }
+
         // ------------------------------------------------------------------------------------------------------------
         // private
         // ------------------------------------------------------------------------------------------------------------
         private static bool IsValidBit(byte bit)
         {
             return bit >= minBitIndex && bit <= maxBitIndex;
+        }
+
+        private static bool IsValidByte(byte byte_)
+        {
+            return byte_ >= minByteIndex && byte_ <= maxByteIndex;
         }
 
         private static bool IsValidBitAmount(int amount)
@@ -124,6 +158,13 @@
             if (!IsValidBit(bit))
                 throw new ArgumentException(String.Format("invalid bit index {0}. Right value is: {1} to {2}.",
                     bit, minBitIndex, maxBitIndex));
+        }
+
+        private static void ByteValidation(byte byte_)
+        {
+            if (!IsValidByte(byte_))
+                throw new ArgumentException(String.Format("invalid byte index {0}. Right value is: {1} to {2}.",
+                    byte_, minByteIndex, maxByteIndex));
         }
 
         private static void BitAmountValidation(int amount)
@@ -141,6 +182,21 @@
                     maxLength, currentLength, maxBitAmount));
         }
 
+        /// <summary>
+        /// bit index of byte start
+        /// </summary>
+        private static byte getByteStart(byte index)
+        {
+            return (byte)(index * byteSize);
+        }
+
+        /// <summary>
+        /// bit index of byte end
+        /// </summary>
+        private static byte getByteEnd(byte index)
+        {
+            return (byte)(getByteStart(index) + byteSize - 1);
+        }
         private static uint GetPureBitValue(byte bit)
         {
             return firstBitMask << bit;
