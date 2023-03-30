@@ -265,5 +265,35 @@ namespace UnitTests
             Assert.AreEqual(0b01010101_01010000_00000101_01010101u,
                 BitUtils.CyclicShiftLeft(0b10101010_10101010_00000000_10101010, 3));
         }
+
+        [TestMethod]
+        public void Permutation()
+        {
+            // immutable
+            var basePermutation = new List<byte>();
+            var number = 1u;
+            for (byte i = 0; i < maxBitAmount; ++i)
+                basePermutation.Add(i);
+            for (int i = 0; i < maxBitAmount; ++i)
+            {
+                number = 1u << i;
+                Assert.AreEqual(number, BitUtils.Permutation(number, basePermutation));
+            }
+
+            number = 0b10101110u;
+            Assert.AreEqual(number, BitUtils.Permutation(number, new List<byte>() { 0, 1, 2, 3, 4, 5, 6, 7 }));
+            Assert.AreEqual(number, BitUtils.Permutation(number, new List<byte>() { 4, 2, 1, 5, 0, 7, 6, 3 }));
+
+            // mutable
+            number = 0b10101110u;
+            Assert.AreEqual(0b10001111u, BitUtils.Permutation(number, new List<byte>() { 5, 3, 7, 1, 4, 0, 6, 2 }));
+
+            number = 0b11111111_00000000_11111111_00000000u;
+            Assert.AreEqual(0b01010011_11110000_10001111_01000110u,
+                BitUtils.Permutation(number, new List<byte>() { 5, 31, 24, 1, 17, 16, 25, 0,
+                    10, 28, 15, 14, 20, 4, 23, 9,
+                    18, 6, 2, 7, 8, 27, 11, 12,
+                    30, 13, 3, 19, 26, 21, 29, 22 }));
+        }
     }
 }
