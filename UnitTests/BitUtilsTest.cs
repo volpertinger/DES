@@ -105,5 +105,86 @@ namespace UnitTests
             Assert.AreEqual(0b1u, BitUtils.InnerJoin(0b011111010101, 6, 5, 12));
             Assert.AreEqual(0b111101010u, BitUtils.InnerJoin(0b011111010101, 1, 2, 12));
         }
+
+        [TestMethod]
+        public void GetByte()
+        {
+            var byte_0 = 0b00110000u;
+            var byte_1 = 0b11001111u;
+            var byte_2 = 0b00001111u;
+            var byte_3 = 0b11110000u;
+            var number = (byte_3 << 24) + (byte_2 << 16) + (byte_1 << 8) + byte_0;
+            Assert.AreEqual((byte)byte_0, BitUtils.GetByte(number, 0));
+            Assert.AreEqual((byte)byte_1, BitUtils.GetByte(number, 1));
+            Assert.AreEqual((byte)byte_2, BitUtils.GetByte(number, 2));
+            Assert.AreEqual((byte)byte_3, BitUtils.GetByte(number, 3));
+        }
+
+        [TestMethod]
+        public void SetByte()
+        {
+            var byte_0 = 0b00110000u;
+            var byte_1 = 0b11001111u;
+            var byte_2 = 0b00001111u;
+            var byte_3 = 0b11110000u;
+            var number = (byte_3 << 24) + (byte_2 << 16) + (byte_1 << 8) + byte_0;
+            // immutable test
+            Assert.AreEqual(number, BitUtils.SetByte(number, 0, (byte)byte_0));
+            Assert.AreEqual(number, BitUtils.SetByte(number, 1, (byte)byte_1));
+            Assert.AreEqual(number, BitUtils.SetByte(number, 2, (byte)byte_2));
+            Assert.AreEqual(number, BitUtils.SetByte(number, 3, (byte)byte_3));
+            // mutable tests
+            Assert.AreEqual(number - byte_0 + byte_1, BitUtils.SetByte(number, 0, (byte)byte_1));
+            Assert.AreEqual(number - byte_0 + byte_2, BitUtils.SetByte(number, 0, (byte)byte_2));
+            Assert.AreEqual(number - byte_0 + byte_3, BitUtils.SetByte(number, 0, (byte)byte_3));
+            Assert.AreEqual(number - (byte_1 << 8) + (byte_0 << 8), BitUtils.SetByte(number, 1, (byte)byte_0));
+            Assert.AreEqual(number - (byte_1 << 8) + (byte_2 << 8), BitUtils.SetByte(number, 1, (byte)byte_2));
+            Assert.AreEqual(number - (byte_1 << 8) + (byte_3 << 8), BitUtils.SetByte(number, 1, (byte)byte_3));
+            Assert.AreEqual(number - (byte_2 << 16) + (byte_0 << 16), BitUtils.SetByte(number, 2, (byte)byte_0));
+            Assert.AreEqual(number - (byte_2 << 16) + (byte_1 << 16), BitUtils.SetByte(number, 2, (byte)byte_1));
+            Assert.AreEqual(number - (byte_2 << 16) + (byte_3 << 16), BitUtils.SetByte(number, 2, (byte)byte_3));
+            Assert.AreEqual(number - (byte_3 << 24) + (byte_0 << 24), BitUtils.SetByte(number, 3, (byte)byte_0));
+            Assert.AreEqual(number - (byte_3 << 24) + (byte_1 << 24), BitUtils.SetByte(number, 3, (byte)byte_1));
+            Assert.AreEqual(number - (byte_3 << 24) + (byte_2 << 24), BitUtils.SetByte(number, 3, (byte)byte_2));
+        }
+
+        [TestMethod]
+        public void BytesSwitch()
+        {
+            var byte_0 = 0b00110000u;
+            var byte_1 = 0b11001111u;
+            var byte_2 = 0b00001111u;
+            var byte_3 = 0b11110000u;
+            var number = (byte_3 << 24) + (byte_2 << 16) + (byte_1 << 8) + byte_0;
+            // immutable test
+            Assert.AreEqual(number, BitUtils.BytesSwitch(number, 0, 0));
+            Assert.AreEqual(number, BitUtils.BytesSwitch(number, 1, 1));
+            Assert.AreEqual(number, BitUtils.BytesSwitch(number, 2, 2));
+            Assert.AreEqual(number, BitUtils.BytesSwitch(number, 3, 3));
+            // mutable test
+            var switched = number - byte_0 + byte_1 - (byte_1 << 8) + (byte_0 << 8);
+            Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 0, 1));
+            Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 1, 0));
+
+            switched = number - byte_0 + byte_2 - (byte_2 << 16) + (byte_0 << 16);
+            Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 0, 2));
+            Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 2, 0));
+
+            switched = number - byte_0 + byte_3 - (byte_3 << 24) + (byte_0 << 24);
+            Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 0, 3));
+            Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 3, 0));
+
+            switched = number - (byte_1 << 8) + (byte_2 << 8) - (byte_2 << 16) + (byte_1 << 16);
+            Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 1, 2));
+            Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 2, 1));
+
+            switched = number - (byte_1 << 8) + (byte_3 << 8) - (byte_3 << 24) + (byte_1 << 24);
+            Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 1, 3));
+            Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 3, 1));
+
+            switched = number - (byte_2 << 16) + (byte_3 << 16) - (byte_3 << 24) + (byte_2 << 24);
+            Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 2, 3));
+            Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 3, 2));
+        }
     }
 }
