@@ -186,5 +186,29 @@ namespace UnitTests
             Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 2, 3));
             Assert.AreEqual(switched, BitUtils.BytesSwitch(number, 3, 2));
         }
+
+        [TestMethod]
+        public void MaxPower()
+        {
+            Assert.AreEqual(31u, BitUtils.MaxNumberPower2(0));
+            for (int i = 0; i < 32; ++i)
+            {
+                Assert.AreEqual(1u << i, BitUtils.MaxNumberPower2(1u << i));
+                if (i != 0)
+                    Assert.AreEqual(1u, BitUtils.MaxNumberPower2((1u << i) - 1));
+            }
+            Assert.AreEqual(1u, BitUtils.MaxNumberPower2(0b000001));
+            Assert.AreEqual(1u, BitUtils.MaxNumberPower2(0b1110101010100101));
+            Assert.AreEqual(1u, BitUtils.MaxNumberPower2(0b1010100010100101));
+            Assert.AreEqual(1u, BitUtils.MaxNumberPower2(0b01001010101010101010101010111111));
+            Assert.AreEqual(1u << 2, BitUtils.MaxNumberPower2(0b00000000000100));
+            Assert.AreEqual(1u << 5, BitUtils.MaxNumberPower2(0b000010101010101100000));
+            Assert.AreEqual(1u << 30, BitUtils.MaxNumberPower2(0b11000000000000000000000000000000));
+            Assert.AreEqual(1u << 29, BitUtils.MaxNumberPower2(0b10100000000000000000000000000000));
+            Assert.AreEqual(1u << 28, BitUtils.MaxNumberPower2(0b10010000000000000000000000000000));
+            Assert.AreEqual(1u << 27, BitUtils.MaxNumberPower2(0b10001000000000000000000000000000));
+            Assert.AreEqual(1u << 26, BitUtils.MaxNumberPower2(0b10000100000000000000000000000000));
+
+        }
     }
 }
