@@ -1,4 +1,11 @@
-﻿// TODO: ASCII LOGO
-// TODO: COPYRIGHT
-Console.WriteLine("DES");
+﻿// copyright merzlovnik@mail.ru github.com/volpertinger
+Console.WriteLine(@"
+██████╗ ███████╗███████╗
+██╔══██╗██╔════╝██╔════╝
+██║  ██║█████╗  ███████╗
+██║  ██║██╔══╝  ╚════██║
+██████╔╝███████╗███████║
+╚═════╝ ╚══════╝╚══════╝
+                        
+");
 
