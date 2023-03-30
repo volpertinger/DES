@@ -163,6 +163,18 @@
 
         }
 
+        public static uint Permutation(uint number, IList<byte> permutation)
+        {
+            var length = permutation.Count();
+            BitAmountValidation(length);
+            var result = 0u;
+            for (byte i = 0; i < length; ++i)
+            {
+                result = SetBit(result, i, GetBit(number, permutation[i]));
+            }
+            return result;
+        }
+
         // ------------------------------------------------------------------------------------------------------------
         // private
         // ------------------------------------------------------------------------------------------------------------
