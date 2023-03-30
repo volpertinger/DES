@@ -1,1 +1,4 @@
-﻿Console.WriteLine("DES");
+﻿// TODO: ASCII LOGO
+// TODO: COPYRIGHT
+Console.WriteLine("DES");
+
