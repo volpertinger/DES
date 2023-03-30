@@ -145,6 +145,24 @@
             return number & (~(number - 1));
         }
 
+        public static uint CyclicShiftRight(uint number, byte shift)
+        {
+            BitAmountValidation(shift);
+            var rightPart = number >> shift;
+            var leftPart = number << (maxBitAmount - shift);
+            return rightPart | leftPart;
+
+        }
+
+        public static uint CyclicShiftLeft(uint number, byte shift)
+        {
+            BitAmountValidation(shift);
+            var leftPart = number << shift;
+            var rightPart = number >> (maxBitAmount - shift);
+            return rightPart | leftPart;
+
+        }
+
         // ------------------------------------------------------------------------------------------------------------
         // private
         // ------------------------------------------------------------------------------------------------------------
