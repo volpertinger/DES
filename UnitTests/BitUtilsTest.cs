@@ -5,13 +5,14 @@ namespace UnitTests
     [TestClass]
     public class BitUtilsTest
     {
-        private readonly byte maxBit = 31;
+        private const byte maxBitIndex = 31;
+        private const byte maxBitAmount = maxBitIndex + 1;
         [TestMethod]
         public void GetBit()
         {
-            for (byte i = 0; i <= maxBit; ++i)
+            for (byte i = 0; i <= maxBitIndex; ++i)
             {
-                for (byte j = 0; j <= maxBit; ++j)
+                for (byte j = 0; j <= maxBitIndex; ++j)
                 {
                     if (j == i)
                     {
@@ -27,7 +28,7 @@ namespace UnitTests
         [TestMethod]
         public void SetBit()
         {
-            for (byte i = 0; i < maxBit; ++i)
+            for (byte i = 0; i < maxBitIndex; ++i)
             {
                 var number = 1u << i;
                 // 0 -> 1
@@ -76,10 +77,10 @@ namespace UnitTests
         [TestMethod]
         public void BitsSwitch()
         {
-            for (byte i = 0; i < maxBit; ++i)
+            for (byte i = 0; i < maxBitIndex; ++i)
             {
                 var numberBefore = 1u << i;
-                byte otherIndex = (byte)(maxBit - i);
+                byte otherIndex = (byte)(maxBitIndex - i);
                 var numberAfter = 1u << otherIndex;
                 Assert.AreEqual(numberAfter, BitUtils.BitsSwitch(numberBefore, i, otherIndex));
             }
@@ -208,7 +209,61 @@ namespace UnitTests
             Assert.AreEqual(1u << 28, BitUtils.MaxNumberPower2(0b10010000000000000000000000000000));
             Assert.AreEqual(1u << 27, BitUtils.MaxNumberPower2(0b10001000000000000000000000000000));
             Assert.AreEqual(1u << 26, BitUtils.MaxNumberPower2(0b10000100000000000000000000000000));
+        }
 
+        [TestMethod]
+        public void CyclicShift()
+        {
+            // basic shift
+            for (byte i = 0; i <= maxBitIndex; ++i)
+            {
+                Assert.AreEqual(1u << i, BitUtils.CyclicShiftLeft(1u, i));
+                var number = 1u << maxBitIndex;
+                Assert.AreEqual(number >> i, BitUtils.CyclicShiftRight(number, i));
+                // immutability
+                Assert.AreEqual(number, BitUtils.CyclicShiftRight(number, maxBitAmount));
+                Assert.AreEqual(number, BitUtils.CyclicShiftLeft(number, maxBitAmount));
+
+            }
+            // cyclic shift right
+
+            Assert.AreEqual(0b10000000_00000000_00000000_00000000u,
+                BitUtils.CyclicShiftRight(0b00000000_00000000_00000000_00000001, 1));
+
+            Assert.AreEqual(0b00000000_00000000_00000000_00000010u,
+                BitUtils.CyclicShiftRight(0b00000000_00000000_00000000_00000001, 31));
+
+            Assert.AreEqual(0b00011111_11100000_00011111_11100000u,
+                BitUtils.CyclicShiftRight(0b11111111_00000000_11111111_00000000, 3));
+
+            Assert.AreEqual(0b10101010_10101010_10101010_10101010u,
+                BitUtils.CyclicShiftRight(0b10101010_10101010_10101010_10101010, 4));
+
+            Assert.AreEqual(0b01010101_01010101_01010101_01010101u,
+                BitUtils.CyclicShiftRight(0b10101010_10101010_10101010_10101010, 3));
+
+            Assert.AreEqual(0b01010101_01010101_01000000_00010101u,
+                BitUtils.CyclicShiftRight(0b10101010_10101010_00000000_10101010, 3));
+
+            // cyclic shift left
+
+            Assert.AreEqual(0b00000000_00000000_00000000_00000001u,
+                BitUtils.CyclicShiftLeft(0b10000000_00000000_00000000_00000000, 1));
+
+            Assert.AreEqual(0b01000000_00000000_00000000_00000000u,
+                BitUtils.CyclicShiftLeft(0b10000000_00000000_00000000_00000000, 31));
+
+            Assert.AreEqual(0b11111000_00000111_11111000_00000111u,
+                BitUtils.CyclicShiftLeft(0b11111111_00000000_11111111_00000000, 3));
+
+            Assert.AreEqual(0b10101010_10101010_10101010_10101010u,
+                BitUtils.CyclicShiftLeft(0b10101010_10101010_10101010_10101010, 4));
+
+            Assert.AreEqual(0b01010101_01010101_01010101_01010101u,
+                BitUtils.CyclicShiftLeft(0b10101010_10101010_10101010_10101010, 3));
+
+            Assert.AreEqual(0b01010101_01010000_00000101_01010101u,
+                BitUtils.CyclicShiftLeft(0b10101010_10101010_00000000_10101010, 3));
         }
     }
 }
