@@ -23,11 +23,11 @@
             BitValidation(index);
             if (index < maxBitIndex / 2)
             {
-                return ((number >> index) & firstBitMask) != 0;
+                return (number >> index & firstBitMask) != 0;
             }
             else
             {
-                return ((number << (maxBitIndex - index) & lastBitMask)) != 0;
+                return (number << maxBitIndex - index & lastBitMask) != 0;
             }
 
         }
@@ -142,14 +142,14 @@
         {
             if (number == 0)
                 return maxBitIndex;
-            return number & (~(number - 1));
+            return number & ~(number - 1);
         }
 
         public static uint CyclicShiftRight(uint number, byte shift)
         {
             BitAmountValidation(shift);
             var rightPart = number >> shift;
-            var leftPart = number << (maxBitAmount - shift);
+            var leftPart = number << maxBitAmount - shift;
             return rightPart | leftPart;
 
         }
@@ -158,7 +158,7 @@
         {
             BitAmountValidation(shift);
             var leftPart = number << shift;
-            var rightPart = number >> (maxBitAmount - shift);
+            var rightPart = number >> maxBitAmount - shift;
             return rightPart | leftPart;
 
         }
@@ -167,6 +167,7 @@
         {
             var length = permutation.Count();
             BitAmountValidation(length);
+            PermutationValidation(permutation);
             var result = 0u;
             for (byte i = 0; i < length; ++i)
             {
@@ -196,28 +197,40 @@
         private static void BitValidation(byte bit)
         {
             if (!IsValidBit(bit))
-                throw new ArgumentException(String.Format("invalid bit index {0}. Right value is: {1} to {2}.",
+                throw new ArgumentException(string.Format("invalid bit index {0}. Right value is: {1} to {2}.",
                     bit, minBitIndex, maxBitIndex));
         }
 
         private static void ByteValidation(byte byte_)
         {
             if (!IsValidByte(byte_))
-                throw new ArgumentException(String.Format("invalid byte index {0}. Right value is: {1} to {2}.",
+                throw new ArgumentException(string.Format("invalid byte index {0}. Right value is: {1} to {2}.",
                     byte_, minByteIndex, maxByteIndex));
         }
 
         private static void BitAmountValidation(int amount)
         {
             if (!IsValidBitAmount(amount))
-                throw new ArgumentException(String.Format("invalid bit amount {0}. Right value is: {1} to {2}.",
+                throw new ArgumentException(string.Format("invalid bit amount {0}. Right value is: {1} to {2}.",
                     amount, minBitAmount, maxBitAmount));
+        }
+
+        private static void PermutationValidation(IList<byte> permutation)
+        {
+            for (byte i = 0; i < permutation.Count; ++i)
+            {
+                if (permutation.Contains(i))
+                    continue;
+                throw new ArgumentException(string.Format("invalid permutation bit {0}. Permutation must contain" +
+                    "all numbers from 0 to {1} once.",
+                    i, permutation.Count));
+            }
         }
 
         private static void CustomLengthValidation(int maxLength, int currentLength)
         {
             if (currentLength > maxLength || maxLength <= 1 || maxLength > maxBitAmount)
-                throw new ArgumentException(String.Format("invalid maxLength {0} or currentLength {1}." +
+                throw new ArgumentException(string.Format("invalid maxLength {0} or currentLength {1}." +
                     "Length must be from 1 to {3}. And currentLength must be < maxLength",
                     maxLength, currentLength, maxBitAmount));
         }
