@@ -2,11 +2,14 @@
 {
     static class Constants
     {
+        // TODO: Masks -> inner join
         public const ulong keyMask = 0b00000000_11111111_11111111_11111111_11111111_11111111_11111111_11111111;
         public const ulong leftMask = 0b11111111_11111111_11111111_11111111_00000000_00000000_00000000_00000000;
         public const ulong RightMask = 0b00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111;
 
-        // number of encrypt rounds
+        /// <summary>
+        /// number of encrypt rounds
+        /// </summary>
         public const byte feistelRounds = 16;
 
         public static readonly List<byte> initPermutation = new()
@@ -32,7 +35,39 @@
             32, 0, 40, 8, 48, 16, 56, 24
         };
 
-        // S blocks
+        /// <summary>
+        /// permutation for half - block in feistel round
+        /// </summary>
+        public static readonly List<byte> halfPermutation = new()
+        {
+            15, 6, 19, 20,
+            28, 11, 27, 16,
+            0, 14, 22, 25,
+            4, 17, 30, 9,
+            1, 7, 23, 13,
+            31, 26, 2, 8,
+            18, 12, 29, 5,
+            21, 10, 3, 24
+        };
+
+        /// <summary>
+        /// expand permutation: 32 bit -> 48 bit
+        /// </summary>
+        public static readonly List<byte> expandPermutation = new()
+        {
+            32, 1, 2, 3, 4, 5,
+            4, 5, 6, 7, 8, 9,
+            8, 9, 10, 11, 12, 13,
+            12, 13, 14, 15, 16, 17,
+            16, 17, 18, 19, 20, 21,
+            20, 21, 22, 23, 24, 25,
+            24, 25, 26, 27, 28, 29,
+            28, 29, 30, 31, 32, 1
+        };
+
+        /// <summary>
+        /// S blocks
+        /// </summary>
         public static readonly List<List<List<byte>>> composePermutations = new()
         {
             // S 1
@@ -195,6 +230,44 @@
                     2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11
                 }
             }
+        };
+
+        /// <summary>
+        /// G function - key init for permutation and deleting validation bits. 64 bit -> 56 bit key.
+        /// </summary>
+        public static readonly List<byte> keyInitPermutation = new()
+        {
+            56, 48, 40, 32, 24, 16, 8,
+            0, 57, 49, 41, 33, 25, 17,
+            9, 1, 58, 50, 42, 34, 26,
+            18, 10, 2, 59, 51, 43, 35,
+            62, 54, 46, 38, 30, 22, 14,
+            6, 61, 53, 45, 37, 29, 21,
+            13, 5, 60, 52, 44, 36, 28,
+            20, 12, 4, 27, 19, 11, 3
+        };
+
+        /// <summary>
+        /// permutation for generated keys from main key
+        /// </summary>
+        public static readonly List<byte> keyFinalPermutation = new()
+        {
+            13, 16, 10, 23, 0, 4,
+            2, 27, 14, 5, 20, 9,
+            22, 18, 11, 3, 25, 7,
+            15, 6, 26, 19, 12, 1,
+            40, 51, 30, 36, 46, 54,
+            29, 39, 50, 44, 32, 47,
+            43, 48, 38, 55, 33, 52,
+            45, 41, 49, 35, 28, 31
+        };
+
+        /// <summary>
+        /// shift value for 16 key generation
+        /// </summary>
+        public static readonly List<byte> keyInitShift = new()
+        {
+            1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
         };
     }
 }
