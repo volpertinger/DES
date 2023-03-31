@@ -170,7 +170,6 @@
         {
             var length = permutation.Count();
             BitAmountValidation(length);
-            PermutationValidation(permutation);
             ulong result = 0;
             for (byte i = 0; i < length; ++i)
             {
@@ -216,18 +215,6 @@
             if (!IsValidBitAmount(amount))
                 throw new ArgumentException(string.Format("invalid bit amount {0}. Right value is: {1} to {2}.",
                     amount, minBitAmount, maxBitAmount));
-        }
-
-        private static void PermutationValidation(IList<byte> permutation)
-        {
-            for (byte i = 0; i < permutation.Count; ++i)
-            {
-                if (permutation.Contains(i))
-                    continue;
-                throw new ArgumentException(string.Format("invalid permutation bit {0}. Permutation must contain" +
-                    "all numbers from 0 to {1} once.",
-                    i, permutation.Count));
-            }
         }
 
         private static void CustomLengthValidation(int maxLength, int currentLength)
