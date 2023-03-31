@@ -3,6 +3,7 @@
     static class Constants
     {
         public const byte keyLength = 56;
+        public const byte blockLength = 64;
         public const byte keyPartLength = keyLength / 2;
         // TODO: Masks -> inner join
         /// <summary>
@@ -25,13 +26,34 @@
         /// <summary>
         /// mask for right half 32-bit from 64-bit
         /// </summary>
-        public const ulong RightMask = 0b00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111;
+        public const ulong rightMask = 0b00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111;
+
+        /// <summary>
+        /// length of minor key after expanding permutation
+        /// </summary>
+        public const byte minorKeyExtendedLength = 48;
+        /// <summary>
+        /// shift to get part for s block input
+        /// </summary>
+        public const byte kernelInputShift = minorKeyExtendedLength / kernelRounds;
+        /// <summary>
+        /// mask for s - block processing
+        /// </summary>
+        public const ulong kernelMask = (1 << kernelInputShift) - 1;
+        /// <summary>
+        /// shift for kernel result
+        /// </summary>
+        public const byte kernelOutputShift = (blockLength / 2) / kernelRounds;
 
 
         /// <summary>
         /// number of encrypt rounds
         /// </summary>
         public const byte feistelRounds = 16;
+        /// <summary>
+        /// number of s - blocks processing for each minor key
+        /// </summary>
+        public const byte kernelRounds = 8;
 
         public static readonly List<byte> initPermutation = new()
         {
@@ -59,7 +81,7 @@
         /// <summary>
         /// permutation for half - block in feistel round
         /// </summary>
-        public static readonly List<byte> halfPermutation = new()
+        public static readonly List<byte> kernelPermutation = new()
         {
             15, 6, 19, 20,
             28, 11, 27, 16,
@@ -87,9 +109,17 @@
         };
 
         /// <summary>
+        /// left Amount of bits that separate row and column coding of S - block
+        /// </summary>
+        public const byte composeLeftBorderAmount = 1;
+        /// <summary>
+        /// right Amount of bits that separate row and column coding of S - block
+        /// </summary>
+        public const byte composeRightBorderAmount = 1;
+        /// <summary>
         /// S blocks
         /// </summary>
-        public static readonly List<List<List<byte>>> composePermutations = new()
+        public static readonly List<List<List<byte>>> composeMatrix = new()
         {
             // S 1
             new()
