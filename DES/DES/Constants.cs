@@ -1,7 +1,5 @@
 ﻿namespace DES.DES
 {
-    // TODO: S blocks + P blocks
-    // TODO: key storage: validation bits - 8, 16, ... 64
     static class Constants
     {
         public const ulong keyMask = 0b00000000_11111111_11111111_11111111_11111111_11111111_11111111_11111111;
