@@ -5,7 +5,7 @@ namespace UnitTests
     [TestClass]
     public class BitUtilsTest
     {
-        private const byte maxBitIndex = 31;
+        private const byte maxBitIndex = 63;
         private const byte maxBitAmount = maxBitIndex + 1;
         [TestMethod]
         public void GetBit()
@@ -16,11 +16,11 @@ namespace UnitTests
                 {
                     if (j == i)
                     {
-                        Assert.AreEqual(true, BitUtils.GetBit(1u << i, j));
+                        Assert.AreEqual(true, BitUtils.GetBit(1ul << i, j));
                     }
                     else
                     {
-                        Assert.AreEqual(false, BitUtils.GetBit(1u << i, j));
+                        Assert.AreEqual(false, BitUtils.GetBit(1ul << i, j));
                     }
                 }
             }
@@ -30,7 +30,7 @@ namespace UnitTests
         {
             for (byte i = 0; i < maxBitIndex; ++i)
             {
-                var number = 1u << i;
+                var number = 1ul << i;
                 // 0 -> 1
                 Assert.AreEqual(number, BitUtils.SetBit(0, i));
                 Assert.AreEqual(number, BitUtils.SetBit(0, i, true));
@@ -49,18 +49,18 @@ namespace UnitTests
             Assert.AreEqual(1u, BitUtils.ClearBit(3, 1));
             Assert.AreEqual(0u, BitUtils.ClearBit(1, 0));
             Assert.AreEqual(16u, BitUtils.ClearBit(24, 3));
-            Assert.AreEqual(0u, BitUtils.ClearBit(1u << 31, 31));
+            Assert.AreEqual(0u, BitUtils.ClearBit(1ul << maxBitIndex, maxBitIndex));
             // 0 -> 0
             Assert.AreEqual(3u, BitUtils.ClearBit(3, 2));
             Assert.AreEqual(1u, BitUtils.ClearBit(1, 1));
             Assert.AreEqual(24u, BitUtils.ClearBit(24, 5));
-            Assert.AreEqual(1u << 31, BitUtils.ClearBit(1u << 31, 30));
+            Assert.AreEqual(1ul << maxBitIndex, BitUtils.ClearBit(1ul << maxBitIndex, 30));
         }
 
         [TestMethod]
         public void SetFirst()
         {
-            var number = 1u + (1u << 1) + (1u << 2);
+            var number = 1ul + (1ul << 1) + (1ul << 2);
             Assert.AreEqual(number, BitUtils.SetFirstBits(0, 3));
             Assert.AreEqual(number, BitUtils.SetFirstBits(number, 3));
         }
@@ -68,10 +68,10 @@ namespace UnitTests
         [TestMethod]
         public void ClearFirst()
         {
-            var number = 1u + (1u << 1) + (1u << 2);
+            var number = 1ul + (1ul << 1) + (1ul << 2);
             Assert.AreEqual(0u, BitUtils.ClearFirstBits(number, 3));
             Assert.AreEqual(0u, BitUtils.ClearFirstBits(number, 18));
-            Assert.AreEqual(1u << 2, BitUtils.ClearFirstBits(number, 2));
+            Assert.AreEqual(1ul << 2, BitUtils.ClearFirstBits(number, 2));
         }
 
         [TestMethod]
@@ -79,9 +79,9 @@ namespace UnitTests
         {
             for (byte i = 0; i < maxBitIndex; ++i)
             {
-                var numberBefore = 1u << i;
+                var numberBefore = 1ul << i;
                 byte otherIndex = (byte)(maxBitIndex - i);
-                var numberAfter = 1u << otherIndex;
+                var numberAfter = 1ul << otherIndex;
                 Assert.AreEqual(numberAfter, BitUtils.BitsSwitch(numberBefore, i, otherIndex));
             }
         }
@@ -191,24 +191,24 @@ namespace UnitTests
         [TestMethod]
         public void MaxPower()
         {
-            Assert.AreEqual(31u, BitUtils.MaxNumberPower2(0));
-            for (int i = 0; i < 32; ++i)
+            Assert.AreEqual(maxBitIndex, BitUtils.MaxNumberPower2(0));
+            for (int i = 0; i < maxBitAmount; ++i)
             {
-                Assert.AreEqual(1u << i, BitUtils.MaxNumberPower2(1u << i));
+                Assert.AreEqual(1ul << i, BitUtils.MaxNumberPower2(1ul << i));
                 if (i != 0)
-                    Assert.AreEqual(1u, BitUtils.MaxNumberPower2((1u << i) - 1));
+                    Assert.AreEqual(1u, BitUtils.MaxNumberPower2((1ul << i) - 1));
             }
-            Assert.AreEqual(1u, BitUtils.MaxNumberPower2(0b000001));
-            Assert.AreEqual(1u, BitUtils.MaxNumberPower2(0b1110101010100101));
-            Assert.AreEqual(1u, BitUtils.MaxNumberPower2(0b1010100010100101));
-            Assert.AreEqual(1u, BitUtils.MaxNumberPower2(0b01001010101010101010101010111111));
-            Assert.AreEqual(1u << 2, BitUtils.MaxNumberPower2(0b00000000000100));
-            Assert.AreEqual(1u << 5, BitUtils.MaxNumberPower2(0b000010101010101100000));
-            Assert.AreEqual(1u << 30, BitUtils.MaxNumberPower2(0b11000000000000000000000000000000));
-            Assert.AreEqual(1u << 29, BitUtils.MaxNumberPower2(0b10100000000000000000000000000000));
-            Assert.AreEqual(1u << 28, BitUtils.MaxNumberPower2(0b10010000000000000000000000000000));
-            Assert.AreEqual(1u << 27, BitUtils.MaxNumberPower2(0b10001000000000000000000000000000));
-            Assert.AreEqual(1u << 26, BitUtils.MaxNumberPower2(0b10000100000000000000000000000000));
+            Assert.AreEqual(1ul, BitUtils.MaxNumberPower2(0b000001));
+            Assert.AreEqual(1ul, BitUtils.MaxNumberPower2(0b1110101010100101));
+            Assert.AreEqual(1ul, BitUtils.MaxNumberPower2(0b1010100010100101));
+            Assert.AreEqual(1ul, BitUtils.MaxNumberPower2(0b01001010101010101010101010111111));
+            Assert.AreEqual(1ul << 2, BitUtils.MaxNumberPower2(0b00000000000100));
+            Assert.AreEqual(1ul << 5, BitUtils.MaxNumberPower2(0b000010101010101100000));
+            Assert.AreEqual(1ul << 30, BitUtils.MaxNumberPower2(0b11000000000000000000000000000000));
+            Assert.AreEqual(1ul << 29, BitUtils.MaxNumberPower2(0b10100000000000000000000000000000));
+            Assert.AreEqual(1ul << 28, BitUtils.MaxNumberPower2(0b10010000000000000000000000000000));
+            Assert.AreEqual(1ul << 27, BitUtils.MaxNumberPower2(0b10001000000000000000000000000000));
+            Assert.AreEqual(1ul << 26, BitUtils.MaxNumberPower2(0b10000100000000000000000000000000));
         }
 
         [TestMethod]
@@ -217,8 +217,8 @@ namespace UnitTests
             // basic shift
             for (byte i = 0; i <= maxBitIndex; ++i)
             {
-                Assert.AreEqual(1u << i, BitUtils.CyclicShiftLeft(1u, i));
-                var number = 1u << maxBitIndex;
+                Assert.AreEqual(1ul << i, BitUtils.CyclicShiftLeft(1u, i));
+                var number = 1ul << maxBitIndex;
                 Assert.AreEqual(number >> i, BitUtils.CyclicShiftRight(number, i));
                 // immutability
                 Assert.AreEqual(number, BitUtils.CyclicShiftRight(number, maxBitAmount));
@@ -228,42 +228,48 @@ namespace UnitTests
             // cyclic shift right
 
             Assert.AreEqual(0b10000000_00000000_00000000_00000000u,
-                BitUtils.CyclicShiftRight(0b00000000_00000000_00000000_00000001, 1));
+                BitUtils.CyclicShiftRight(0b00000000_00000000_00000000_00000001, 1, 32));
 
             Assert.AreEqual(0b00000000_00000000_00000000_00000010u,
-                BitUtils.CyclicShiftRight(0b00000000_00000000_00000000_00000001, 31));
+                BitUtils.CyclicShiftRight(0b00000000_00000000_00000000_00000001, 31, 32));
 
             Assert.AreEqual(0b00011111_11100000_00011111_11100000u,
-                BitUtils.CyclicShiftRight(0b11111111_00000000_11111111_00000000, 3));
+                BitUtils.CyclicShiftRight(0b11111111_00000000_11111111_00000000ul, 3, 32));
 
             Assert.AreEqual(0b10101010_10101010_10101010_10101010u,
-                BitUtils.CyclicShiftRight(0b10101010_10101010_10101010_10101010, 4));
+                BitUtils.CyclicShiftRight(0b10101010_10101010_10101010_10101010, 4, 32));
 
             Assert.AreEqual(0b01010101_01010101_01010101_01010101u,
-                BitUtils.CyclicShiftRight(0b10101010_10101010_10101010_10101010, 3));
+                BitUtils.CyclicShiftRight(0b10101010_10101010_10101010_10101010, 3, 32));
 
             Assert.AreEqual(0b01010101_01010101_01000000_00010101u,
-                BitUtils.CyclicShiftRight(0b10101010_10101010_00000000_10101010, 3));
+                BitUtils.CyclicShiftRight(0b10101010_10101010_00000000_10101010, 3, 32));
+
+            Assert.AreEqual(0b00000000_11111111_00000000_11111111_00000000_11111111_00000000_11111111ul,
+                BitUtils.CyclicShiftRight(0b11111111_00000000_11111111_00000000_11111111_00000000_11111111_00000000ul, 8));
 
             // cyclic shift left
 
             Assert.AreEqual(0b00000000_00000000_00000000_00000001u,
-                BitUtils.CyclicShiftLeft(0b10000000_00000000_00000000_00000000, 1));
+                BitUtils.CyclicShiftLeft(0b10000000_00000000_00000000_00000000, 1, 32));
 
             Assert.AreEqual(0b01000000_00000000_00000000_00000000u,
-                BitUtils.CyclicShiftLeft(0b10000000_00000000_00000000_00000000, 31));
+                BitUtils.CyclicShiftLeft(0b10000000_00000000_00000000_00000000, 31, 32));
 
             Assert.AreEqual(0b11111000_00000111_11111000_00000111u,
-                BitUtils.CyclicShiftLeft(0b11111111_00000000_11111111_00000000, 3));
+                BitUtils.CyclicShiftLeft(0b11111111_00000000_11111111_00000000, 3, 32));
 
             Assert.AreEqual(0b10101010_10101010_10101010_10101010u,
-                BitUtils.CyclicShiftLeft(0b10101010_10101010_10101010_10101010, 4));
+                BitUtils.CyclicShiftLeft(0b10101010_10101010_10101010_10101010, 4, 32));
 
             Assert.AreEqual(0b01010101_01010101_01010101_01010101u,
-                BitUtils.CyclicShiftLeft(0b10101010_10101010_10101010_10101010, 3));
+                BitUtils.CyclicShiftLeft(0b10101010_10101010_10101010_10101010, 3, 32));
 
             Assert.AreEqual(0b01010101_01010000_00000101_01010101u,
-                BitUtils.CyclicShiftLeft(0b10101010_10101010_00000000_10101010, 3));
+                BitUtils.CyclicShiftLeft(0b10101010_10101010_00000000_10101010, 3, 32));
+
+            Assert.AreEqual(0b00000000_11111111_00000000_11111111_00000000_11111111_00000000_11111111ul,
+                BitUtils.CyclicShiftLeft(0b11111111_00000000_11111111_00000000_11111111_00000000_11111111_00000000ul, 8));
         }
 
         [TestMethod]
@@ -271,12 +277,12 @@ namespace UnitTests
         {
             // immutable
             var basePermutation = new List<byte>();
-            var number = 1u;
+            var number = 1ul;
             for (byte i = 0; i < maxBitAmount; ++i)
                 basePermutation.Add(i);
             for (int i = 0; i < maxBitAmount; ++i)
             {
-                number = 1u << i;
+                number = 1ul << i;
                 Assert.AreEqual(number, BitUtils.Permutation(number, basePermutation));
             }
 
