@@ -2,10 +2,31 @@
 {
     static class Constants
     {
+        public const byte keyLength = 56;
+        public const byte keyPartLength = keyLength / 2;
         // TODO: Masks -> inner join
+        /// <summary>
+        /// mask for removing validation key bits
+        /// </summary>
         public const ulong keyMask = 0b01111111_01111111_01111111_01111111_01111111_01111111_01111111_01111111;
+        /// <summary>
+        /// mask for key left half 28-bit from 56-bit
+        /// </summary>
+        public const ulong keyLeftMask = 0b11111111_11111111_11111111_11111111_00000000_00000000_00000000_00000000;
+        /// <summary>
+        /// mask for key right half 28-bit from 56-bit
+        /// </summary>
+        public const ulong keyRightMask = 0b00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111;
+
+        /// <summary>
+        /// mask for left half 32-bit from 64-bit
+        /// </summary>
         public const ulong leftMask = 0b11111111_11111111_11111111_11111111_00000000_00000000_00000000_00000000;
+        /// <summary>
+        /// mask for right half 32-bit from 64-bit
+        /// </summary>
         public const ulong RightMask = 0b00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111;
+
 
         /// <summary>
         /// number of encrypt rounds
