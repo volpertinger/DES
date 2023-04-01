@@ -1,0 +1,24 @@
+﻿{
+  "Operations": [
+    {
+      "PathInput": "***\Examples\\Plain\\Image.png",
+      "PathOutput": "***\Examples\\Encrypted\\Image.png",
+      "Operation": "Encrypt"
+    },
+    {
+      "PathInput": "***\Examples\\Plain\\Text.txt",
+      "PathOutput": "***\Examples\\Encrypted\\Text.txt",
+      "Operation": "Encrypt"
+    },
+    {
+      "PathInput": "***\Examples\\Encrypted\\Image.png",
+      "PathOutput": "***\Examples\\Decrypted\\Image.png",
+      "Operation": "Decrypt"
+    },
+    {
+      "PathInput": "***\Examples\\Encrypted\\Text.txt",
+      "PathOutput": "***\Examples\\Decrypted\\Text.txt",
+      "Operation": "Decrypt"
+    }
+  ]
+}
