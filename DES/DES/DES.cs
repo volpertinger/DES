@@ -1,6 +1,6 @@
 ﻿namespace DES.DES
 {
-    sealed class DES : IDES
+    sealed public class DES
     {
         // ------------------------------------------------------------------------------------------------------------
         // fields
@@ -22,14 +22,40 @@
             throw new NotImplementedException();
         }
 
-        public ulong Encrypt(ulong block)
+        public ulong EncryptBlock(ulong block)
         {
-            return EncryptBlock(block);
+            //block = BitUtils.Permutation(block, Constants.initPermutation);
+            var left = (block & Constants.blockLeftMask) >> Constants.blockPartLength;
+            var right = block & Constants.blockRightMask;
+            
+            for (int i = 0; i < Constants.feistelRounds; ++i)
+            {
+                var newRight = left ^ kernelFunction(right, MinorKeys[i]);
+                left = right;
+                right = newRight;
+            }
+            
+            ulong result = ((right << Constants.blockPartLength) & Constants.blockLeftMask) | (left & Constants.blockRightMask);
+            //result = BitUtils.Permutation(result, Constants.finalPermutation);
+            return result;
         }
 
-        public ulong Decrypt(ulong block)
+        public ulong DecryptBlock(ulong block)
         {
-            return DecryptBlock(block);
+            //block = BitUtils.Permutation(block, Constants.finalPermutation);
+            var left = (block & Constants.blockLeftMask) >> Constants.blockPartLength;
+            var right = block & Constants.blockRightMask;
+            
+            for (int i = Constants.feistelRounds - 1; i >= 0; --i)
+            {
+                var newRight = left ^ kernelFunction(right, MinorKeys[i]);
+                left = right;
+                right = newRight;
+            }
+            
+            ulong result = ((right << Constants.blockPartLength) & Constants.blockLeftMask) | (left & Constants.blockRightMask);
+            //result = BitUtils.Permutation(result, Constants.initPermutation);
+            return result;
         }
 
         public bool Decrypt(string inputFilePath, string outputFilePath)
@@ -81,43 +107,6 @@
                 result = result << Constants.kernelOutputShift;
             }
             result = BitUtils.Permutation(result, Constants.kernelPermutation);
-            return result;
-        }
-
-        private ulong EncryptBlock(ulong block)
-        {
-            //block = BitUtils.Permutation(block, Constants.initPermutation);
-            var left = (block & Constants.leftMask) >> Constants.blockPartLength;
-            var right = block & Constants.rightMask;
-            /*
-            for (int i = 0; i < Constants.feistelRounds; ++i)
-            {
-                var newRight = left ^ kernelFunction(right, MinorKeys[i]);
-                left = right;
-                right = newRight;
-            }
-            */
-            ulong result = ((right << Constants.blockPartLength) & Constants.leftMask) | (left & Constants.rightMask);
-            //result = BitUtils.Permutation(result, Constants.finalPermutation);
-            return result;
-        }
-
-        private ulong DecryptBlock(ulong block)
-        {
-            //block = BitUtils.Permutation(block, Constants.finalPermutation);
-            var left = (block & Constants.leftMask) >> Constants.blockPartLength;
-            var right = block & Constants.rightMask;
-            /*
-            for (int i = Constants.feistelRounds - 1; i >= 0; --i)
-            {
-                var newLeft = right ^ kernelFunction(left, MinorKeys[i]);
-                right = left;
-                left = newLeft;
-
-            }
-            */
-            ulong result = ((right << Constants.blockPartLength) & Constants.leftMask) | (left & Constants.rightMask);
-            //result = BitUtils.Permutation(result, Constants.initPermutation);
             return result;
         }
     }

@@ -25,22 +25,22 @@
         /// </summary>
         public const ulong keyMask = 0b01111111_01111111_01111111_01111111_01111111_01111111_01111111_01111111;
         /// <summary>
-        /// mask for key left half 28-bit from 56-bit
+        /// mask for key left half 28-bit from 56-bit TODO
         /// </summary>
         public const ulong keyLeftMask = 0b11111111_11111111_11111111_11111111_00000000_00000000_00000000_00000000;
         /// <summary>
-        /// mask for key right half 28-bit from 56-bit
+        /// mask for key right half 28-bit from 56-bit TODO
         /// </summary>
         public const ulong keyRightMask = 0b00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111;
 
         /// <summary>
         /// mask for left half 32-bit from 64-bit
         /// </summary>
-        public const ulong leftMask = 0b11111111_11111111_11111111_11111111_00000000_00000000_00000000_00000000;
+        public const ulong blockLeftMask = 0b11111111_11111111_11111111_11111111_00000000_00000000_00000000_00000000;
         /// <summary>
         /// mask for right half 32-bit from 64-bit
         /// </summary>
-        public const ulong rightMask = 0b00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111;
+        public const ulong blockRightMask = 0b00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111;
 
         /// <summary>
         /// shift to get part for s block input
