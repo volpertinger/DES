@@ -87,7 +87,6 @@
 
         private static ulong kernelFunction(ulong blockHalf, ulong minorKey)
         {
-            return blockHalf;
             blockHalf = BitUtils.Permutation(minorKey, Constants.expandPermutation);
             ulong sBlockInput = blockHalf ^ minorKey;
             ulong result = 0;
