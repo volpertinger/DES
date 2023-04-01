@@ -1,12 +1,16 @@
 ﻿namespace DES.DES
 {
-    sealed public class DES
+    public class DES
     {
         // ------------------------------------------------------------------------------------------------------------
         // fields
         // ------------------------------------------------------------------------------------------------------------
-        private ulong MajorKey { get; set; }
-        private List<ulong> MinorKeys { get; set; }
+        private ulong MajorKey { get; init; }
+        private List<ulong> MinorKeys { get; init; }
+        /// <summary>
+        /// block number for encrypt before write into stream
+        /// </summary>
+        private uint BatchSize { get; init; }
 
         // ------------------------------------------------------------------------------------------------------------
         // public
