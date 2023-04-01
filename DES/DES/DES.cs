@@ -7,10 +7,6 @@
         // ------------------------------------------------------------------------------------------------------------
         private ulong MajorKey { get; init; }
         private List<ulong> MinorKeys { get; init; }
-        /// <summary>
-        /// block number for encrypt before write into stream
-        /// </summary>
-        private uint BatchSize { get; init; }
 
         // ------------------------------------------------------------------------------------------------------------
         // public
@@ -21,9 +17,33 @@
             MinorKeys = GenerateKeys(MajorKey);
         }
 
-        public bool Encrypt(string inputFilePath, string outputFilePath)
+        public bool Encrypt(FileStream ifs, FileStream ofs)
         {
-            throw new NotImplementedException();
+            var buffer = new byte[Constants.blockLengthInBytes];
+            int length;
+            while ((length = ifs.Read(buffer, 0, Constants.blockLengthInBytes)) > 0)
+            {
+                var block = ByteArrayToBlock(buffer);
+                var encrypt = EncryptBlock(block);
+                var byteArray = BlockToByteArray(encrypt, Constants.blockLengthInBytes);
+                ofs.Write(byteArray, 0, Constants.blockLengthInBytes);
+                buffer = new byte[Constants.blockLengthInBytes];
+            }
+            return true;
+        }
+
+        public bool Decrypt(FileStream ifs, FileStream ofs)
+        {
+            var buffer = new byte[Constants.blockLengthInBytes];
+            int length;
+            while ((length = ifs.Read(buffer, 0, Constants.blockLengthInBytes)) > 0)
+            {
+                var block = ByteArrayToBlock(buffer);
+                var decrypt = DecryptBlock(block);
+                var byteArray = BlockToByteArray(decrypt, length);
+                ofs.Write(byteArray, 0, length - CountFictiveBytes(byteArray));
+            }
+            return true;
         }
 
         public ulong EncryptBlock(ulong block)
@@ -62,15 +82,42 @@
             return result;
         }
 
-        public bool Decrypt(string inputFilePath, string outputFilePath)
-        {
-            throw new NotImplementedException();
-        }
-
         // ------------------------------------------------------------------------------------------------------------
         // private
         // ------------------------------------------------------------------------------------------------------------
 
+        private static byte CountFictiveBytes(byte[] bytes)
+        {
+            byte result = 0;
+            for (var i = bytes.Count() - 1; i >= 0; --i)
+            {
+                if (bytes[i] != 0)
+                    break;
+                ++result;
+            }
+            return result;
+        }
+
+        private static ulong ByteArrayToBlock(byte[] bytes)
+        {
+            ulong result = 0;
+            foreach (var element in bytes)
+            {
+                result <<= Constants.byteSize;
+                result += element;
+            }
+            return result;
+        }
+
+        private static byte[] BlockToByteArray(ulong block, int length)
+        {
+            var result = new byte[length];
+            for (byte i = 0; i < length; ++i)
+            {
+                result[i] = BitUtils.GetByte(block, i);
+            }
+            return result;
+        }
         private static List<ulong> GenerateKeys(ulong majorKey)
         {
             majorKey = BitUtils.Permutation(majorKey, Constants.keyInitPermutation);

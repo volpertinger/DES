@@ -4,6 +4,8 @@
     {
         public const byte keyLength = 56;
         public const byte blockLength = 64;
+        public const byte byteSize = 8;
+        public const byte blockLengthInBytes = blockLength / byteSize;
         public const byte blockPartLength = blockLength / 2;
         public const byte keyPartLength = keyLength / 2;
         /// <summary>
