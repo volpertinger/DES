@@ -300,6 +300,16 @@ namespace UnitTests
                     10, 28, 15, 14, 20, 4, 23, 9,
                     18, 6, 2, 7, 8, 27, 11, 12,
                     30, 13, 3, 19, 26, 21, 29, 22 }));
+
+            // loop permutation
+            number = 0b10101110u;
+            var permutation = new List<byte>() { 5, 3, 7, 1, 4, 0, 6, 2 };
+            var result = number;
+            for (int i = 0; i < permutation.Count; ++i)
+            {
+                result = BitUtils.Permutation(result, permutation);
+            }
+            Assert.AreEqual(number, result);
         }
     }
 }
