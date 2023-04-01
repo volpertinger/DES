@@ -5,6 +5,19 @@
         public const byte keyLength = 56;
         public const byte blockLength = 64;
         public const byte keyPartLength = keyLength / 2;
+        /// <summary>
+        /// length of minor key after expanding permutation
+        /// </summary>
+        public const byte minorKeyExtendedLength = 48;
+        /// <summary>
+        /// number of encrypt rounds
+        /// </summary>
+        public const byte feistelRounds = 16;
+        /// <summary>
+        /// number of s - blocks processing for each minor key
+        /// </summary>
+        public const byte kernelRounds = 8;
+
         // TODO: Masks -> inner join
         /// <summary>
         /// mask for removing validation key bits
@@ -29,10 +42,6 @@
         public const ulong rightMask = 0b00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111;
 
         /// <summary>
-        /// length of minor key after expanding permutation
-        /// </summary>
-        public const byte minorKeyExtendedLength = 48;
-        /// <summary>
         /// shift to get part for s block input
         /// </summary>
         public const byte kernelInputShift = minorKeyExtendedLength / kernelRounds;
@@ -43,17 +52,7 @@
         /// <summary>
         /// shift for kernel result
         /// </summary>
-        public const byte kernelOutputShift = (blockLength / 2) / kernelRounds;
-
-
-        /// <summary>
-        /// number of encrypt rounds
-        /// </summary>
-        public const byte feistelRounds = 16;
-        /// <summary>
-        /// number of s - blocks processing for each minor key
-        /// </summary>
-        public const byte kernelRounds = 8;
+        public const byte kernelOutputShift = blockLength / 2 / kernelRounds;
 
         public static readonly List<byte> initPermutation = new()
         {
@@ -116,6 +115,8 @@
         /// right Amount of bits that separate row and column coding of S - block
         /// </summary>
         public const byte composeRightBorderAmount = 1;
+        public const byte composeRowSize = 2;
+        public const byte composeColSize = 4;
         /// <summary>
         /// S blocks
         /// </summary>

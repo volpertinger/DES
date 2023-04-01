@@ -22,6 +22,11 @@
             throw new NotImplementedException();
         }
 
+        public ulong Encrypt(ulong block)
+        {
+            return EncryptBlock(block);
+        }
+
         public bool Decrypt(string inputFilePath, string outputFilePath)
         {
             throw new NotImplementedException();
@@ -38,8 +43,7 @@
             ulong right = majorKey & Constants.keyRightMask;
 
             var result = new List<ulong>();
-            // <= for init shift
-            for (int i = 0; i <= Constants.feistelRounds; ++i)
+            for (int i = 0; i < Constants.feistelRounds; ++i)
             {
                 left = BitUtils.CyclicShiftLeft(left, Constants.keyInitShift[i], Constants.keyPartLength);
                 right = BitUtils.CyclicShiftLeft(right, Constants.keyInitShift[i], Constants.keyPartLength);
@@ -61,10 +65,12 @@
                 sBlockInput = sBlockInput >> Constants.kernelInputShift;
                 var row = (int)BitUtils.OuterJoin(currentInput,
                     Constants.composeLeftBorderAmount,
-                    Constants.composeRightBorderAmount);
+                    Constants.composeRightBorderAmount,
+                    Constants.composeRowSize);
                 var column = (int)BitUtils.InnerJoin(currentInput,
                     Constants.composeLeftBorderAmount,
-                    Constants.composeRightBorderAmount);
+                    Constants.composeRightBorderAmount,
+                    Constants.composeColSize);
                 result += Constants.composeMatrix[i][row][column];
                 result = result << Constants.kernelOutputShift;
             }
@@ -72,7 +78,7 @@
             return result;
         }
 
-        private ulong Encode(ulong block)
+        private ulong EncryptBlock(ulong block)
         {
             block = BitUtils.Permutation(block, Constants.initPermutation);
             var left = block & Constants.leftMask;
