@@ -27,6 +27,11 @@
             return EncryptBlock(block);
         }
 
+        public ulong Decrypt(ulong block)
+        {
+            return DecryptBlock(block);
+        }
+
         public bool Decrypt(string inputFilePath, string outputFilePath)
         {
             throw new NotImplementedException();
@@ -56,6 +61,7 @@
 
         private static ulong kernelFunction(ulong blockHalf, ulong minorKey)
         {
+            return blockHalf;
             blockHalf = BitUtils.Permutation(minorKey, Constants.expandPermutation);
             ulong sBlockInput = blockHalf ^ minorKey;
             ulong result = 0;
@@ -80,19 +86,38 @@
 
         private ulong EncryptBlock(ulong block)
         {
-            block = BitUtils.Permutation(block, Constants.initPermutation);
-            var left = block & Constants.leftMask;
+            //block = BitUtils.Permutation(block, Constants.initPermutation);
+            var left = (block & Constants.leftMask) >> Constants.blockPartLength;
             var right = block & Constants.rightMask;
+            /*
             for (int i = 0; i < Constants.feistelRounds; ++i)
             {
-                var newLeft = right;
                 var newRight = left ^ kernelFunction(right, MinorKeys[i]);
-                left = newLeft;
+                left = right;
                 right = newRight;
             }
-            // TODO: mayBe change left and right
-            ulong result = ((left << (Constants.blockLength / 2)) & Constants.leftMask) | (right & Constants.rightMask);
-            result = BitUtils.Permutation(result, Constants.finalPermutation);
+            */
+            ulong result = ((right << Constants.blockPartLength) & Constants.leftMask) | (left & Constants.rightMask);
+            //result = BitUtils.Permutation(result, Constants.finalPermutation);
+            return result;
+        }
+
+        private ulong DecryptBlock(ulong block)
+        {
+            //block = BitUtils.Permutation(block, Constants.finalPermutation);
+            var left = (block & Constants.leftMask) >> Constants.blockPartLength;
+            var right = block & Constants.rightMask;
+            /*
+            for (int i = Constants.feistelRounds - 1; i >= 0; --i)
+            {
+                var newLeft = right ^ kernelFunction(left, MinorKeys[i]);
+                right = left;
+                left = newLeft;
+
+            }
+            */
+            ulong result = ((right << Constants.blockPartLength) & Constants.leftMask) | (left & Constants.rightMask);
+            //result = BitUtils.Permutation(result, Constants.initPermutation);
             return result;
         }
     }

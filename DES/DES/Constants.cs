@@ -4,6 +4,7 @@
     {
         public const byte keyLength = 56;
         public const byte blockLength = 64;
+        public const byte blockPartLength = blockLength / 2;
         public const byte keyPartLength = keyLength / 2;
         /// <summary>
         /// length of minor key after expanding permutation
@@ -53,7 +54,6 @@
         /// shift for kernel result
         /// </summary>
         public const byte kernelOutputShift = blockLength / 2 / kernelRounds;
-
         public static readonly List<byte> initPermutation = new()
         {
             57, 49, 41, 33, 25, 17, 9, 1,

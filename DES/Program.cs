@@ -20,3 +20,13 @@ Console.WriteLine(@"
   ╚═══╝   ╚═════╝ ╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝
                                                                                                                                                                                                                                                            
 ");
+
+ulong key = 32;
+var ss = new DES.DES.DES(key);
+
+ulong data = 13;
+Console.WriteLine(String.Format("initial data: {0}", data));
+var result = ss.Encrypt(data);
+Console.WriteLine(String.Format("encrypted data: {0}", result));
+result = ss.Decrypt(result);
+Console.WriteLine(String.Format("decrypted data: {0}", result));
