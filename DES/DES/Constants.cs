@@ -19,19 +19,6 @@
         /// </summary>
         public const byte kernelRounds = 8;
 
-        // TODO: Masks -> inner join
-        /// <summary>
-        /// mask for removing validation key bits
-        /// </summary>
-        public const ulong keyMask = 0b01111111_01111111_01111111_01111111_01111111_01111111_01111111_01111111;
-        /// <summary>
-        /// mask for key left half 28-bit from 56-bit TODO
-        /// </summary>
-        public const ulong keyLeftMask = 0b11111111_11111111_11111111_11111111_00000000_00000000_00000000_00000000;
-        /// <summary>
-        /// mask for key right half 28-bit from 56-bit TODO
-        /// </summary>
-        public const ulong keyRightMask = 0b00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111;
 
         /// <summary>
         /// mask for left half 32-bit from 64-bit
@@ -41,6 +28,19 @@
         /// mask for right half 32-bit from 64-bit
         /// </summary>
         public const ulong blockRightMask = 0b00000000_00000000_00000000_00000000_11111111_11111111_11111111_11111111;
+
+        /// <summary>
+        /// mask for removing validation key bits
+        /// </summary>
+        public const ulong keyMask = 0b01111111_01111111_01111111_01111111_01111111_01111111_01111111_01111111;
+        /// <summary>
+        /// mask for key left half 28-bit from 56-bit TODO
+        /// </summary>
+        public const ulong keyLeftMask = keyMask & blockLeftMask;
+        /// <summary>
+        /// mask for key right half 28-bit from 56-bit TODO
+        /// </summary>
+        public const ulong keyRightMask = keyMask & blockRightMask;
 
         /// <summary>
         /// shift to get part for s block input
@@ -54,6 +54,19 @@
         /// shift for kernel result
         /// </summary>
         public const byte kernelOutputShift = blockLength / 2 / kernelRounds;
+
+        /// <summary>
+        /// left Amount of bits that separate row and column coding of S - block
+        /// </summary>
+        public const byte composeLeftBorderAmount = 1;
+        /// <summary>
+        /// right Amount of bits that separate row and column coding of S - block
+        /// </summary>
+        public const byte composeRightBorderAmount = 1;
+        public const byte composeColSize = kernelInputShift - composeLeftBorderAmount - composeRightBorderAmount;
+        public const byte composeRowSize = kernelInputShift - composeColSize;
+
+
         public static readonly List<byte> initPermutation = new()
         {
             57, 49, 41, 33, 25, 17, 9, 1,
@@ -106,17 +119,6 @@
             24, 25, 26, 27, 28, 29,
             28, 29, 30, 31, 32, 1
         };
-
-        /// <summary>
-        /// left Amount of bits that separate row and column coding of S - block
-        /// </summary>
-        public const byte composeLeftBorderAmount = 1;
-        /// <summary>
-        /// right Amount of bits that separate row and column coding of S - block
-        /// </summary>
-        public const byte composeRightBorderAmount = 1;
-        public const byte composeRowSize = 2;
-        public const byte composeColSize = 4;
         /// <summary>
         /// S blocks
         /// </summary>
