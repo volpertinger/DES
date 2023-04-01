@@ -1,5 +1,7 @@
 ﻿// copyright merzlovnik@mail.ru github.com/volpertinger
-
+using DES;
+using System.Reflection;
+using System.Text.Json;
 Console.WriteLine(@"
 ██████╗ ███████╗███████╗                                                                         
 ██╔══██╗██╔════╝██╔════╝                                                                         
@@ -22,43 +24,39 @@ Console.WriteLine(@"
                                                                                                                                                                                                                                                            
 ");
 
-string pathI = @"C:\Users\MerzlovNikolay\source\repos\DES\DES\Examples\Plain\Text.txt";
-string pathOC = @"C:\Users\MerzlovNikolay\source\repos\DES\DES\Examples\Encrypted\Text.txt";
-string pathOD = @"C:\Users\MerzlovNikolay\source\repos\DES\DES\Examples\Decrypted\Text.txt";
+string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", @"Settings.json");
+string jsonString = File.ReadAllText(path);
+Settings? settings = JsonSerializer.Deserialize<Settings>(jsonString);
 
-var ss = new DES.DES.DES(128);
+if (settings is null)
+    throw new ArgumentException(String.Format("Invalid Settings.json file\n{0}", jsonString));
 
-if (File.Exists(pathOD))
+var des = new DES.DES.DES(settings.Key);
+
+foreach (var setting in settings.Operations)
 {
-    File.Delete(pathOD);
-}
+    if (File.Exists(setting.PathOutput))
+    {
+        throw new ArgumentException(String.Format("File with path {0} Already exists!", setting.PathInput));
+    }
 
-using (FileStream fsi = File.OpenRead(pathI))
-{
-    // Delete files if it exists.
-    if (File.Exists(pathOC))
+    using (FileStream fsi = File.OpenRead(setting.PathInput))
     {
-        File.Delete(pathOC);
+        using (FileStream fso = File.OpenWrite(setting.PathOutput))
+        {
+            switch (setting.Operation)
+            {
+                case Operations.Encrypt:
+                    des.Encrypt(fsi, fso);
+                    break;
+                case Operations.Decrypt:
+                    des.Decrypt(fsi, fso);
+                    break;
+                default:
+                    throw new ArgumentException("Something went wrong. Better pray.");
+            };
+            fso.Close();
+        }
+        fsi.Close();
     }
-    using (FileStream fso = File.OpenWrite(pathOC))
-    {
-        ss.Encrypt(fsi, fso);
-        fso.Close();
-    }
-    fsi.Close();
-}
-
-using (FileStream fsi = File.OpenRead(pathOC))
-{
-    // Delete files if it exists.
-    if (File.Exists(pathOD))
-    {
-        File.Delete(pathOD);
-    }
-    using (FileStream fso = File.OpenWrite(pathOD))
-    {
-        ss.Decrypt(fsi, fso);
-        fso.Close();
-    }
-    fsi.Close();
 }
