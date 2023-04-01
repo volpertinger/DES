@@ -24,37 +24,37 @@
 
         public ulong EncryptBlock(ulong block)
         {
-            //block = BitUtils.Permutation(block, Constants.initPermutation);
+            block = BitUtils.Permutation(block, Constants.initPermutation);
             var left = (block & Constants.blockLeftMask) >> Constants.blockPartLength;
             var right = block & Constants.blockRightMask;
-            
+
             for (int i = 0; i < Constants.feistelRounds; ++i)
             {
                 var newRight = left ^ kernelFunction(right, MinorKeys[i]);
                 left = right;
                 right = newRight;
             }
-            
+
             ulong result = ((right << Constants.blockPartLength) & Constants.blockLeftMask) | (left & Constants.blockRightMask);
-            //result = BitUtils.Permutation(result, Constants.finalPermutation);
+            result = BitUtils.Permutation(result, Constants.finalPermutation);
             return result;
         }
 
         public ulong DecryptBlock(ulong block)
         {
-            //block = BitUtils.Permutation(block, Constants.finalPermutation);
+            block = BitUtils.Permutation(block, Constants.initPermutation);
             var left = (block & Constants.blockLeftMask) >> Constants.blockPartLength;
             var right = block & Constants.blockRightMask;
-            
+
             for (int i = Constants.feistelRounds - 1; i >= 0; --i)
             {
                 var newRight = left ^ kernelFunction(right, MinorKeys[i]);
                 left = right;
                 right = newRight;
             }
-            
+
             ulong result = ((right << Constants.blockPartLength) & Constants.blockLeftMask) | (left & Constants.blockRightMask);
-            //result = BitUtils.Permutation(result, Constants.initPermutation);
+            result = BitUtils.Permutation(result, Constants.finalPermutation);
             return result;
         }
 
