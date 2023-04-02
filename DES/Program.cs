@@ -27,7 +27,7 @@ Console.WriteLine(@"
 string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", @"Settings.json");
 string jsonString = File.ReadAllText(path);
 Settings? settings = JsonSerializer.Deserialize<Settings>(jsonString);
-
+//TODO json read try - except
 if (settings is null)
     throw new ArgumentException(String.Format("Invalid Settings.json file\n{0}", jsonString));
 
