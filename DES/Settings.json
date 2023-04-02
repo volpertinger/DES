@@ -11,6 +11,11 @@
       "Operation": "Encrypt"
     },
     {
+      "PathInput": "***\\Examples\\Plain\\Audio.mp3",
+      "PathOutput": "***\\Examples\\Encrypted\\Audio.mp3",
+      "Operation": "Encrypt"
+    },
+    {
       "PathInput": "***\\Examples\\Plain\\Video.mp4",
       "PathOutput": "***\\Examples\\Encrypted\\Video.mp4",
       "Operation": "Encrypt"
@@ -26,7 +31,12 @@
       "Operation": "Decrypt"
     },
     {
-      "PathInput": "***\\Examples\\\\Encrypted\\\\Video.mp4",
+      "PathInput": "***\\Examples\\Encrypted\\Audio.mp3",
+      "PathOutput": "***\\Examples\\Decrypted\\Audio.mp3",
+      "Operation": "Decrypt"
+    },
+    {
+      "PathInput": "***\\Examples\\Encrypted\\Video.mp4",
       "PathOutput": "***\\Examples\\Decrypted\\Video.mp4",
       "Operation": "Decrypt"
     }
