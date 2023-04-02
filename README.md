@@ -4,7 +4,7 @@
 
 ### Key [ulong] - 64 bit key
 
-### Operations [array<Operation>] - array of encryption and decryption operations
+### Operations [array[Operation]] - array of encryption and decryption operations
 
 #### Operation
 
