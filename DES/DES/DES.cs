@@ -89,10 +89,10 @@
         private static ulong ByteArrayToBlock(byte[] bytes)
         {
             ulong result = 0;
-            foreach (var element in bytes)
+            for (int i = bytes.Length - 1; i >= 0; --i)
             {
                 result <<= Constants.byteSize;
-                result += element;
+                result += bytes[i];
             }
             return result;
         }
