@@ -1,23 +1,33 @@
 ﻿{
   "Operations": [
     {
-      "PathInput": "***\Examples\\Plain\\Image.png",
-      "PathOutput": "***\Examples\\Encrypted\\Image.png",
+      "PathInput": "***\\Examples\\Plain\\Image.png",
+      "PathOutput": "***\\Examples\\Encrypted\\Image.png",
       "Operation": "Encrypt"
     },
     {
-      "PathInput": "***\Examples\\Plain\\Text.txt",
-      "PathOutput": "***\Examples\\Encrypted\\Text.txt",
+      "PathInput": "***\\Examples\\Plain\\Text.txt",
+      "PathOutput": "***\\Examples\\Encrypted\\Text.txt",
       "Operation": "Encrypt"
     },
     {
-      "PathInput": "***\Examples\\Encrypted\\Image.png",
-      "PathOutput": "***\Examples\\Decrypted\\Image.png",
+      "PathInput": "***\\Examples\\Plain\\Video.mp4",
+      "PathOutput": "***\\Examples\\Encrypted\\Video.mp4",
+      "Operation": "Encrypt"
+    },
+    {
+      "PathInput": "***\\Examples\\Encrypted\\Image.png",
+      "PathOutput": "***\\Examples\\Decrypted\\Image.png",
       "Operation": "Decrypt"
     },
     {
-      "PathInput": "***\Examples\\Encrypted\\Text.txt",
-      "PathOutput": "***\Examples\\Decrypted\\Text.txt",
+      "PathInput": "***\\Examples\\Encrypted\\Text.txt",
+      "PathOutput": "***\\Examples\\Decrypted\\Text.txt",
+      "Operation": "Decrypt"
+    },
+    {
+      "PathInput": "***\\Examples\\\\Encrypted\\\\Video.mp4",
+      "PathOutput": "***\\Examples\\Decrypted\\Video.mp4",
       "Operation": "Decrypt"
     }
   ]
