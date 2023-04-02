@@ -1,13 +1,24 @@
 ﻿{
+  "Key": 12345678910,
   "Operations": [
+    {
+      "PathInput": "***\\Examples\\Plain\\Text.txt",
+      "PathOutput": "***\\Examples\\Encrypted\\Text.txt",
+      "Operation": "Encrypt"
+    },
     {
       "PathInput": "***\\Examples\\Plain\\Image.png",
       "PathOutput": "***\\Examples\\Encrypted\\Image.png",
       "Operation": "Encrypt"
     },
     {
-      "PathInput": "***\\Examples\\Plain\\Text.txt",
-      "PathOutput": "***\\Examples\\Encrypted\\Text.txt",
+      "PathInput": "***\\Examples\\Plain\\Image.jpg",
+      "PathOutput": "***\\Examples\\Encrypted\\Image.jpg",
+      "Operation": "Encrypt"
+    },
+    {
+      "PathInput": "***\\Examples\\Plain\\Image.bmp",
+      "PathOutput": "***\\Examples\\Encrypted\\Image.bmp",
       "Operation": "Encrypt"
     },
     {
@@ -21,13 +32,23 @@
       "Operation": "Encrypt"
     },
     {
+      "PathInput": "***\\Examples\\Encrypted\\Text.txt",
+      "PathOutput": "***\\Examples\\Decrypted\\Text.txt",
+      "Operation": "Decrypt"
+    },
+    {
       "PathInput": "***\\Examples\\Encrypted\\Image.png",
       "PathOutput": "***\\Examples\\Decrypted\\Image.png",
       "Operation": "Decrypt"
     },
     {
-      "PathInput": "***\\Examples\\Encrypted\\Text.txt",
-      "PathOutput": "***\\Examples\\Decrypted\\Text.txt",
+      "PathInput": "***\\Examples\\Encrypted\\Image.jpg",
+      "PathOutput": "***\\Examples\\Decrypted\\Image.jpg",
+      "Operation": "Decrypt"
+    },
+    {
+      "PathInput": "***\\Examples\\Encrypted\\Image.bmp",
+      "PathOutput": "***\\Examples\\Decrypted\\Image.bmp",
       "Operation": "Decrypt"
     },
     {
