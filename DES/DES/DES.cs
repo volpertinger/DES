@@ -41,7 +41,7 @@
                 var block = ByteArrayToBlock(buffer);
                 var decrypt = DecryptBlock(block);
                 var byteArray = BlockToByteArray(decrypt, length);
-                ofs.Write(byteArray, 0, length - CountFictiveBytes(byteArray));
+                ofs.Write(byteArray, 0, length);
             }
             return true;
         }
@@ -85,18 +85,6 @@
         // ------------------------------------------------------------------------------------------------------------
         // private
         // ------------------------------------------------------------------------------------------------------------
-
-        private static byte CountFictiveBytes(byte[] bytes)
-        {
-            byte result = 0;
-            for (var i = bytes.Count() - 1; i >= 0; --i)
-            {
-                if (bytes[i] != 0)
-                    break;
-                ++result;
-            }
-            return result;
-        }
 
         private static ulong ByteArrayToBlock(byte[] bytes)
         {
